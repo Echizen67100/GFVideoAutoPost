@@ -6,6 +6,7 @@ from tkinter import messagebox
 import requests
 from pytube import YouTube
 import re
+import time
 
 # Obtenez le chemin absolu du script
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -40,6 +41,21 @@ def delete_file(file_path):
     except OSError as e:
         print(f"Erreur lors de la suppression du fichier {file_path}. Raison : {e.strerror}")
 
+def check_if_media_container_ready(status_url):
+    response = requests.get(status_url)
+    if response.status_code == 200:
+        status_response_json = json.loads(response.text)
+        if status_response_json['status_code'] == 'FINISHED':
+            print("ig media container is ready")
+            return True
+        else:
+            print('waiting for ig media container to be ready...')
+            time.sleep(30)  # Attendre 5 secondes avant de vérifier à nouveau
+            return check_if_media_container_ready(status_url)  # Appel récursif
+    else:
+        print(f"Error Occurred while checking status: {response.text}")
+        return False
+
 def download_youtube_video(youtube_url, path_to_save_video):
     yt = YouTube(youtube_url)
     
@@ -62,7 +78,7 @@ def download_youtube_video(youtube_url, path_to_save_video):
     audio_file_path = audio_stream.download(output_path=path_to_save_video, filename_prefix='audio')
 
     # Obtenez le nom de base du fichier vidéo (sans extension)
-    base_filename = os.path.basename(video_file_path).replace('video', '')
+    base_filename = os.path.basename(video_file_path).replace('.mp4', '')
 
     # Combinez les flux vidéo et audio
     output_file_path = os.path.join(path_to_save_video, f"{base_filename}_max_quality.mp4")
@@ -196,17 +212,30 @@ def post_to_tiktok(video_title, video_description, video_path):
         logging.error(f'Erreur inattendue lors de la publication sur TikTok: {e}')
         return 'Echec TikTok!'
 
-
 def post_to_instagram(video_title, video_description, video_url):
+    
     container_url = f'https://graph.facebook.com/v18.0/{INSTAGRAM_USER_ID}/media'
+    print(video_url)
     container_payload = {
-        'image_url': video_url,
+        'video_url': video_url,
+        'media_type': 'REELS',
         'caption': f"{video_title}\n{video_description}",
         'access_token': INSTAGRAM_ACCESS_TOKEN
     }
     container_response = requests.post(container_url, data=container_payload)
     if container_response.status_code == 200:
         container_id = container_response.json().get('id')
+
+        # Vérifier le Statut du Conteneur
+        status_url = f'https://graph.facebook.com/v18.0/{container_id}?fields=status_code&access_token={INSTAGRAM_ACCESS_TOKEN}'
+        container_ready = check_if_media_container_ready(status_url)
+        
+        if not container_ready:
+            print("Media processing failed.")
+            logging.error("Media processing failed.")
+            return
+
+
 
         publish_url = f'https://graph.facebook.com/v18.0/{INSTAGRAM_USER_ID}/media_publish'
         publish_payload = {
