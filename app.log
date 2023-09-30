@@ -1,0 +1,20 @@
+2023-09-30 19:44:28,444 - L'ID de la vidéo YouTube est requis.
+2023-09-30 19:45:53,410 - Erreur lors de la publication de la vidéo: regex_search: could not find match for (?:v=|\/)([0-9A-Za-z_-]{11}).*
+2023-09-30 19:46:27,389 - Erreur lors de la publication de la vidéo: 'items'
+2023-09-30 19:48:52,161 - Erreur lors de la publication de la vidéo: 'items'
+2023-09-30 19:52:32,355 - Erreur lors de la publication de la vidéo: 'items'
+2023-09-30 19:54:00,184 - Erreur lors de la publication de la vidéo: 'items'
+2023-09-30 20:07:32,323 - Échec de la publication de la vidéo sur la page Facebook. Détails de l'erreur: {"error":{"message":"Invalid OAuth access token - Cannot parse access token","type":"OAuthException","code":190,"fbtrace_id":"AgzozLYQLP3sAaF0WIZ7i3-"}}
+2023-09-30 20:07:32,520 - Échec de l’initialisation de la publication du Reel sur la page Facebook. Détails de l'erreur: {"error":{"message":"Invalid OAuth access token - Cannot parse access token","type":"OAuthException","code":190,"fbtrace_id":"AeShq4EnJ9nsuTqnKlg3p79"}}
+2023-09-30 20:07:32,720 - Échec de la création du conteneur Instagram. Détails de l'erreur: {"error":{"message":"Invalid OAuth access token - Cannot parse access token","type":"OAuthException","code":190,"fbtrace_id":"ATCH_VZxFqvk6JPcp-KGd_f"}}
+2023-09-30 20:07:32,966 - Échec de l’initialisation de la publication sur TikTok. Détails de l'erreur: {"data":{},"error":{"code":"access_token_invalid","message":"The access token is invalid or not found in the request.","log_id":"20230930180732420E325D3194DE77EE69"}}
+2023-09-30 20:08:36,106 - Échec de la création du conteneur Instagram. Détails de l'erreur: {"error":{"message":"Invalid OAuth access token - Cannot parse access token","type":"OAuthException","code":190,"fbtrace_id":"A3htF7A4In1cCZFjeDNovo-"}}
+2023-09-30 20:08:36,308 - Échec de l’initialisation de la publication sur TikTok. Détails de l'erreur: {"data":{},"error":{"code":"access_token_invalid","message":"The access token is invalid or not found in the request.","log_id":"2023093018083679C684D143D01776B036"}}
+2023-09-30 20:11:18,717 - L'ID de la vidéo YouTube est requis.
+2023-09-30 20:11:37,795 - Échec de l’initialisation de la publication sur TikTok. Détails de l'erreur: {"error":{"code":"access_token_invalid","message":"The access token is invalid or not found in the request.","log_id":"20230930181137D174BC5A19C7A4786744"},"data":{}}
+2023-09-30 20:13:15,388 - Échec de la création du conteneur Instagram. Détails de l'erreur: {"error":{"message":"Invalid OAuth access token - Cannot parse access token","type":"OAuthException","code":190,"fbtrace_id":"AOy25rK2lW8OajSCOtr2UzE"}}
+2023-09-30 20:13:15,646 - Échec de l’initialisation de la publication sur TikTok. Détails de l'erreur: {"data":{},"error":{"code":"access_token_invalid","message":"The access token is invalid or not found in the request.","log_id":"202309301813156C3C42959E070D778237"}}
+2023-09-30 20:15:07,094 - Échec de l’initialisation de la publication sur TikTok. Détails de l'erreur: {"data":{},"error":{"code":"access_token_invalid","message":"The access token is invalid or not found in the request.","log_id":"20230930181507D01A5034E22E2478D0E7"}}
+2023-09-30 20:16:40,486 - Échec de l’initialisation de la publication sur TikTok. Détails de l'erreur: {"data":{},"error":{"code":"access_token_invalid","message":"The access token is invalid or not found in the request.","log_id":"2023093018164034ABF740A9CCEB79ABF3"}}
+2023-09-30 20:17:33,130 - Échec de l’initialisation de la publication sur TikTok. Détails de l'erreur: {"data":{},"error":{"code":"access_token_invalid","message":"The access token is invalid or not found in the request.","log_id":"20230930181733C82821E8D93CBD9287B1"}}
+2023-09-30 20:23:30,487 - Échec de l’initialisation de la publication sur TikTok. Détails de l'erreur: {"data":{},"error":{"code":"access_token_invalid","message":"The access token is invalid or not found in the request.","log_id":"20230930182330E8AE1E1A8BCA3F79564A"}}

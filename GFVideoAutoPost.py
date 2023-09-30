@@ -92,8 +92,10 @@ def post_to_facebook(video_title, video_description, video_url):
 
     if response.status_code == 200:
         logging.info('Vidéo publiée avec succès sur la page Facebook!')
+        return 'Vidéo publiée avec succès sur Facebook!'
     else:
         logging.error(f'Échec de la publication de la vidéo sur la page Facebook. Détails de l\'erreur: {response.text}')
+        return 'Echec Facebook!'
 
 
 def post_to_facebook_as_reel(video_title, video_description, path_to_video):
@@ -135,14 +137,18 @@ def post_to_facebook_as_reel(video_title, video_description, path_to_video):
             
             if finish_response.status_code == 200:
                 logging.info('Reel publié avec succès sur la page Facebook!')
+                return 'Vidéo publiée avec succès sur Facebook Réel!'
             else:
                 logging.error(f'Échec de la finalisation de la publication du Reel sur la page Facebook. Détails de l\'erreur: {finish_response.text}')
+                return 'Echec Réel Facebook!'
         else:
             logging.error(f'Échec de l’upload du fichier pour le réel Facebook. Détails de l\'erreur: {upload_response.text}')
+            return 'Echec Réel Facebook!'
     else:
         logging.error(f'Échec de l’initialisation de la publication du Reel sur la page Facebook. Détails de l\'erreur: {response.text}')
+        return 'Echec Réel Facebook!'
 
-def post_to_tiktok(video_path, video_title, video_description):
+def post_to_tiktok(video_title, video_description, video_path):
     try:
         # Étape 1: Initialisation
         init_url = 'https://open.tiktokapis.com/v2/post/publish/video/init/'
@@ -168,29 +174,30 @@ def post_to_tiktok(video_path, video_title, video_description):
             upload_url = response.json().get('upload_url')
         else:
             logging.error(f'Échec de l’initialisation de la publication sur TikTok. Détails de l\'erreur: {response.text}')
-            return
+            return 'Echec TikTok!'
         
         # Étape 2: Upload du fichier
         with open(video_path, 'rb') as video_file:
             upload_response = requests.post(upload_url, data=video_file.read())
         if upload_response.status_code != 200:
             logging.error(f'Échec de l’upload de la vidéo sur TikTok. Détails de l\'erreur: {upload_response.text}')
-            print('Échec de l’upload de la vidéo sur TikTok.')
-            print('Détails de l\'erreur:', upload_response.text)
-            return
+            return 'Echec TikTok!'
         
         # Étape 3: Confirmation
         confirm_url = f'https://open.tiktokapis.com/v2/post/publish/video/confirm/{video_id}'
         confirm_response = requests.post(confirm_url, headers=headers)
         if confirm_response.status_code == 200:
             logging.info('Vidéo publiée avec succès sur TikTok!')
+            return 'Vidéo publiée avec succès sur TikTok!'
         else:
             logging.error(f'Échec de la confirmation de la publication sur TikTok. Détails de l\'erreur: {confirm_response.text}')
+            return 'Echec TikTok'
     except Exception as e:
         logging.error(f'Erreur inattendue lors de la publication sur TikTok: {e}')
+        return 'Echec TikTok!'
 
 
-def post_to_instagram(video_url, video_title, video_description):
+def post_to_instagram(video_title, video_description, video_url):
     container_url = f'https://graph.facebook.com/v18.0/{INSTAGRAM_USER_ID}/media'
     container_payload = {
         'image_url': video_url,
@@ -209,10 +216,13 @@ def post_to_instagram(video_url, video_title, video_description):
         publish_response = requests.post(publish_url, data=publish_payload)
         if publish_response.status_code == 200:
             logging.info('Vidéo publiée avec succès sur Instagram!')
+            return 'Vidéo publiée avec succès sur Instagram!'
         else:
             logging.error(f'Échec de la publication de la vidéo sur Instagram. Détails de l\'erreur: {publish_response.text}')
+            return 'Echec Instagram!'
     else:
         logging.error(f'Échec de la création du conteneur Instagram. Détails de l\'erreur: {container_response.text}')
+        return 'Echec Instagram!'
 
 
 class App:
@@ -226,9 +236,37 @@ class App:
         self.entry_video_id = tk.Entry(root)
         self.entry_video_id.pack()
 
+        # Cases à cocher pour chaque réseau social
+        self.facebook_var = tk.BooleanVar(value=True)
+        self.facebook_checkbutton = tk.Checkbutton(root, text="Facebook", variable=self.facebook_var)
+        self.facebook_checkbutton.pack()
+
+        self.facebook_reel_var = tk.BooleanVar(value=True)
+        self.facebook_reel_checkbutton = tk.Checkbutton(root, text="Réel Facebook", variable=self.facebook_reel_var)
+        self.facebook_reel_checkbutton.pack()
+
+        self.instagram_var = tk.BooleanVar(value=True)
+        self.instagram_checkbutton = tk.Checkbutton(root, text="Instagram", variable=self.instagram_var)
+        self.instagram_checkbutton.pack()
+
+        self.tiktok_var = tk.BooleanVar(value=True)
+        self.tiktok_checkbutton = tk.Checkbutton(root, text="TikTok", variable=self.tiktok_var)
+        self.tiktok_checkbutton.pack()
+
+        # Option pour supprimer le fichier de sortie
+        self.delete_file_var = tk.BooleanVar(value=True)
+        self.delete_file_checkbutton = tk.Checkbutton(root, text="Supprimer le fichier de sortie", variable=self.delete_file_var)
+        self.delete_file_checkbutton.pack()
+
         # Bouton de soumission
         self.submit_button = tk.Button(root, text="Publier la Vidéo", command=self.publish_video)
         self.submit_button.pack()
+
+        self.facebook_checkbutton.pack(anchor='w')
+        self.facebook_reel_checkbutton.pack(anchor='w')
+        self.instagram_checkbutton.pack(anchor='w')
+        self.tiktok_checkbutton.pack(anchor='w')
+        self.delete_file_checkbutton.pack(anchor='w')
 
     def publish_video(self):
         video_id = self.entry_video_id.get()
@@ -237,31 +275,42 @@ class App:
             logging.error("L'ID de la vidéo YouTube est requis.")
             return
 
-        try:
-            youtube_url = f'https://www.youtube.com/watch?v={video_id}'
-            path_to_save_video = PATH_TEMP_MEDIA
-            downloaded_file_path = download_youtube_video(youtube_url, path_to_save_video)
+    
+        youtube_url = f'https://www.youtube.com/watch?v={video_id}'
+        path_to_save_video = PATH_TEMP_MEDIA
+        downloaded_file_path = download_youtube_video(youtube_url, path_to_save_video)
 
-            url = f'https://www.googleapis.com/youtube/v3/videos?id={video_id}&part=snippet,contentDetails&key={YOUTUBE_API_KEY}'
-            response = requests.get(url)
-            video_details = response.json()
+        url = f'https://www.googleapis.com/youtube/v3/videos?id={video_id}&part=snippet,contentDetails&key={YOUTUBE_API_KEY}'
+        response = requests.get(url)
+        video_details = response.json()
 
-            video_title = video_details['items'][0]['snippet']['title']
-            video_description = video_details['items'][0]['snippet']['description']
+        video_title = video_details['items'][0]['snippet']['title']
+        video_description = video_details['items'][0]['snippet']['description']
 
-            #post_to_facebook(video_title, video_description, downloaded_file_path)
-            #post_to_facebook_as_reel(video_title, video_description, downloaded_file_path)
-            #post_to_tiktok(downloaded_file_path, video_title, video_description)
-            #post_to_instagram(downloaded_file_path, video_title, video_description)
+        messages = []
 
-            # Supprimer la vidéo téléchargée
-            #delete_file(downloaded_file_path)
+        # Vérifiez les variables BooleanVar pour savoir quelles actions effectuer
+        if self.facebook_var.get():
+            msg = post_to_facebook(video_title, video_description, downloaded_file_path)
+            messages.append(msg)
+        
+        if self.facebook_reel_var.get():
+            msg = post_to_facebook_as_reel(video_title, video_description, downloaded_file_path)
+            messages.append(msg)
+        
+        if self.instagram_var.get():
+            msg = post_to_instagram(video_title, video_description, downloaded_file_path)
+            messages.append(msg)
+        print(self.tiktok_var.get())
+        if self.tiktok_var.get():
+            msg = post_to_tiktok(video_title, video_description, downloaded_file_path)
+            print(msg)
+            messages.append(msg)
+        
+        if self.delete_file_var.get():
+            delete_file(downloaded_file_path)
 
-            messagebox.showinfo("Succès", "La vidéo a été publiée avec succès!")
-        except Exception as e:
-            logging.error(f"Erreur lors de la publication de la vidéo: {e}")
-            messagebox.showerror("Erreur", f"Erreur lors de la publication de la vidéo: {e}")
-
+        messagebox.showinfo("Résultats de la publication", "\n".join(messages))
 
 if __name__ == "__main__":
     root = tk.Tk()
