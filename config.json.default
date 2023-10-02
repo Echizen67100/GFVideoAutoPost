@@ -5,5 +5,10 @@
     "INSTAGRAM_USER_ID": "XXXXX",
     "YOUTUBE_API_KEY": "XXXXX",
     "FACEBOOK_PAGE_ID": "XXXXX",
-	"PATH_TEMP_MEDIA": "XXXXX"
+	"PATH_TEMP_MEDIA": "XXXXX",
+    "FTP_USER":"XXXXX",
+    "FTP_PSW":"XXXXX",
+    "FTP_HOST":"XXXXX",
+    "FTP_PORT":"22",
+    "URL_DISTANT_DOWNLOAD":"https://www.XXXXX/uploads/"
 }
