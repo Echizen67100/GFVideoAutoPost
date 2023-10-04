@@ -128,10 +128,11 @@ def download_youtube_video(youtube_url, path_to_save_video):
     os.system(f'ffmpeg -i "{video_file_path}" -i "{audio_file_path}" -c:v copy -c:a aac "{output_file_path}"')
     compatible_file_path = os.path.join(path_to_save_video, f"{clean_base_filename}_compatible.mp4")
     subprocess.run([
-        'ffmpeg', '-i', output_file_path, '-c:v', 'libx265', '-profile:v', 'main', 
-        '-level', '4.0', '-pix_fmt', 'yuv420p', '-crf', '23', '-c:a', 'aac', '-b:a', '189k',
-        '-movflags', '+faststart', '-max_muxing_queue_size', '9999', compatible_file_path
+        'ffmpeg', '-i', output_file_path, '-c:v', 'libx264', '-b:v', '3500k', 
+        '-pix_fmt', 'yuv420p', '-crf', '23', '-c:a', 'aac', '-b:a', '189k',
+        '-movflags', '+faststart', compatible_file_path
     ])
+    
     os.remove(video_file_path)
     os.remove(audio_file_path)
     os.remove(output_file_path)
